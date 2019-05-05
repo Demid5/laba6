@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class testForm extends JFrame {
     private JPanel panel1;
-    private JTable table1;
+    public JTable table1;
     private JScrollPane scroll;
 
     public testForm() {
@@ -13,10 +13,16 @@ public class testForm extends JFrame {
 
 
         DefaultTableModel model = new DefaultTableModel(data, headers);
+        model.addColumn("pk");
+        ;
         //table1 = new JTable(model);
 
         //scroll = new JScrollPane(table1);
         table1.setModel(model);
+        /*table1.getColumnModel().getColumn(3).setMaxWidth(0);
+        table1.getColumnModel().getColumn(3).setMinWidth(0);
+        table1.getColumnModel().getColumn(3).setPreferredWidth(0);*/
+        table1.removeColumn(table1.getColumnModel().getColumn(3));
 
         //panel1.add(scroll, BorderLayout.CENTER);
 

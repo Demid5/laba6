@@ -26,23 +26,27 @@ public class Main {
             System.out.println(e.toString());
         }*/
 
-        //testForm m = new testForm();
-        AnotherForm m = new AnotherForm();
-        /*DataBase db = DataBase.getInstance();
+        testForm m = new testForm();
+        //AnotherForm m = new AnotherForm();
+        DataBase db = DataBase.getInstance();
         ResultSet rs = db.executeTest();
         try {
             while (rs.next()) {
-                Object[] data = new Object[3];
+                Object[] data = new Object[4];
                 data[0] = rs.getString(2);
                 data[1] = rs.getString(4);
                 data[2] = rs.getString(5);
+                data[3] = rs.getString(1);
                 m.addRow(data);
             }
             rs.close();
+            for (int i = 0; i < m.table1.getRowCount(); i++) {
+                System.out.println(m.table1.getModel().getValueAt(i, 3));
+            }
         }
         catch (Exception e) {
             System.out.println(e.toString());
-        }*/
+        }
 
         //m.show();
 
