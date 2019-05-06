@@ -12,7 +12,7 @@ public class testForm extends JFrame {
         Object[][] data = {};
 
 
-        DefaultTableModel model = new DefaultTableModel(data, headers);
+        MyTableModel model = new MyTableModel(data, headers);
         model.addColumn("pk");
         ;
         //table1 = new JTable(model);
