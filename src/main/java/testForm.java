@@ -33,6 +33,7 @@ public class testForm extends JFrame {
         setVisible(true);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        table1.addMouseListener(new ExtMouseAdapter());
     }
 
     public void addRow(Object[] dat) {
