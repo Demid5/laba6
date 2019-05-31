@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Constructor;
+import java.util.Enumeration;
 import javax.swing.JTable;
 import javax.swing.Timer;
 
@@ -18,10 +19,12 @@ public class ExtMouseAdapter extends MouseAdapter {
     private int col = -1;
     private int row = -1;
     private String className;
+    private int len;
 
-    public ExtMouseAdapter(String className) {
+    public ExtMouseAdapter(String className, int len) {
 
         this.className = className;
+        this.len = len;
 
         ActionListener actionListener = new ActionListener() {
 
@@ -90,15 +93,18 @@ public class ExtMouseAdapter extends MouseAdapter {
 //                    AnotherForm af = (AnotherForm) Class.forName("AnotherForm").newInstance();
                     if (owner instanceof JTable) {
 
-                        //todo FIX CLASS
-
-                        Object[] data = new Object[3];
-                        data[0] = ((JTable) owner).getModel().getValueAt(row, 0);
+                        Object[] data = new Object[len];
+                        /*data[0] = ((JTable) owner).getModel().getValueAt(row, 0);
                         data[1] = ((JTable) owner).getModel().getValueAt(row, 1);
-                        data[2] = ((JTable) owner).getModel().getValueAt(row, 2);
-                        Constructor constructor = Class.forName("TestDialog").getConstructor(String.class, Object[].class);
-                        System.out.println(constructor);
-                        Dialog dialog = (Dialog) constructor.newInstance("wtf", data);
+                        data[2] = ((JTable) owner).getModel().getValueAt(row, 2);*/
+                        for (int i = 0; i < len; i++) {
+                            data[i] =  ((JTable) owner).getModel().getValueAt(row, i);
+                        }
+
+                        Constructor constructor =
+                                Class.forName(className).getConstructor(Object[].class, MyTableModel.class, int.class);
+                        Dialog dialog = (Dialog)
+                                constructor.newInstance(data, ((JTable) owner).getModel(), row);
 //                        TestDialog dialog = new TestDialog(data);
                     }
                 }

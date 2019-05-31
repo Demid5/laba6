@@ -34,6 +34,10 @@ public class DataBase {
         }
     }
 
+    public PreparedStatement prepareStatement(String query) throws SQLException {
+        return connection.prepareStatement(query);
+    }
+
     public ResultSet executeRequest(String request) {
         try {
             Statement sqlStatement = connection.createStatement();

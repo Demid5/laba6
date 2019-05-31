@@ -49,6 +49,7 @@ public class MainForm extends JFrame{
             System.out.println(e.toString());
         }
         tableCustomer.removeColumn(tableCustomer.getColumnModel().getColumn(0));
+        tableCustomer.addMouseListener(new ExtMouseAdapter("CustomerDialog", 5));
 
     }
 
