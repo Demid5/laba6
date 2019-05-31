@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 
 public class MainForm extends JFrame{
@@ -23,6 +25,8 @@ public class MainForm extends JFrame{
     private JTable table7;
     private JTable table8;
     private JTable table9;
+    private JPanel panelCustomer;
+    private JButton buttonCus;
 
     private void addRow(MyTableModel model, Object[] dat) {
         model.addRow(dat);
@@ -51,6 +55,12 @@ public class MainForm extends JFrame{
         tableCustomer.removeColumn(tableCustomer.getColumnModel().getColumn(0));
         tableCustomer.addMouseListener(new ExtMouseAdapter("CustomerDialog", 5));
 
+        buttonCus.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                CustomerDialog dialog = new CustomerDialog((MyTableModel) tableCustomer.getModel());
+            }
+        });
+
     }
 
     public MainForm() {
@@ -60,6 +70,7 @@ public class MainForm extends JFrame{
         setSize(new Dimension(800, 600));
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
 
     }
 
