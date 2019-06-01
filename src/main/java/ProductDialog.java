@@ -1,23 +1,46 @@
-import oracle.jdbc.proxy.annotation.Pre;
-
 import javax.swing.*;
 import java.awt.event.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 
-public class CustomerDialog extends JDialog {
+public class ProductDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextArea textAreaPK;
     private JTextArea textAreaName;
-    private JTextArea textAreaTIN;
-    private JTextArea textAreaAddress;
-    private JTextArea textAreaTelephone;
+    private JTextArea textAreaCost;
+    private JComboBox comboBoxMeasureName;
+    private JTextArea textAreaMeasurePK;
     private MyTableModel model;
     private int row;
+    private HashMap<String, Integer> textToValue;
+    //private HashMap<String, Integer> textToPosition;
+    private HashMap<Integer,Integer> valueToPosition;
 
-    public CustomerDialog(Object[] data, MyTableModel model, int row) {
+    private void initComboBox() {
+        DataBase db = DataBase.getInstance();
+        ResultSet rs = db.executeRequest("select * from measure");
+        try {
+            int i = 0;
+            textToValue = new HashMap<String, Integer>();
+            //textToPosition = new HashMap<String, Integer>();
+            valueToPosition = new HashMap<Integer, Integer>();
+            while (rs.next()) {
+                textToValue.put(rs.getString(2), rs.getInt(1));
+                //textToPosition.put(rs.getString(2), i);
+                valueToPosition.put(rs.getInt(1), i++);
+                comboBoxMeasureName.addItem(rs.getString(2));
+            }
+            rs.close();
+        }
+        catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    public ProductDialog(Object[] data, MyTableModel model, int row) {
         this.model = model;
         this.row = row;
 
@@ -54,15 +77,23 @@ public class CustomerDialog extends JDialog {
 
         textAreaPK.setText((String) data[0]);
         textAreaName.setText((String) data[1]);
-        textAreaTIN.setText((String) data[2]);
-        textAreaAddress.setText((String) data[3]);
-        textAreaTelephone.setText((String) data[4]);
+        textAreaCost.setText((String) data[2]);
+        textAreaMeasurePK.setText((String) data[3]);
+
+        initComboBox();
+        comboBoxMeasureName.setSelectedIndex(valueToPosition.get(Integer.valueOf(textAreaMeasurePK.getText())));
+
+        comboBoxMeasureName.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textAreaMeasurePK.setText(textToValue.get(comboBoxMeasureName.getSelectedItem()).toString());
+            }
+        });
 
         pack();
         setVisible(true);
     }
 
-    public CustomerDialog(MyTableModel model) {
+    public ProductDialog(MyTableModel model) {
         this.model = model;
 
         setContentPane(contentPane);
@@ -96,55 +127,62 @@ public class CustomerDialog extends JDialog {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+        initComboBox();
+
+        comboBoxMeasureName.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textAreaMeasurePK.setText(textToValue.get(comboBoxMeasureName.getSelectedItem()).toString());
+            }
+        });
+
         pack();
         setVisible(true);
     }
+
 
     private void onOK() {
         try {
             DataBase db = DataBase.getInstance();
             PreparedStatement statement;
             if (!textAreaPK.getText().equals("")) {
-                statement = db.prepareStatement("update customer set full_name = ?, tin = ?," +
-                        " address = ?, telephone_number = ? where pk_customer = ?");
+                statement = db.prepareStatement("update product set name_p = ?, price = ?," +
+                        " pk_measure = ? where pk_product = ?");
                 statement.setString(1, textAreaName.getText());
-                statement.setString(2, textAreaTIN.getText());
-                statement.setString(3, textAreaAddress.getText());
-                statement.setString(4, textAreaTelephone.getText());
-                statement.setString(5, textAreaPK.getText());
+                statement.setString(2, textAreaCost.getText());
+                statement.setString(3, textAreaMeasurePK.getText());
+                statement.setString(4, textAreaPK.getText());
                 statement.executeQuery();
                 statement.close();
+
                 model.setValueAt(textAreaName.getText(), row, 1);
-                model.setValueAt(textAreaTIN.getText(), row, 2);
-                model.setValueAt(textAreaAddress.getText(), row, 3);
-                model.setValueAt(textAreaTelephone.getText(), row, 4);
-            }
-            else {
-                ResultSet rs = db.executeRequest("select customer_seq.nextval from dual");
+                model.setValueAt(textAreaCost.getText(), row, 2);
+                model.setValueAt(textAreaMeasurePK.getText(), row, 3);
+                model.setValueAt(comboBoxMeasureName.getSelectedItem(), row, 4);
+
+            } else {
+                ResultSet rs = db.executeRequest("select product_seq.nextval from dual");
                 rs.next();
                 int pk = rs.getInt(1);
                 rs.close();
-                statement = db.prepareStatement("insert into customer(pk_customer, full_name, tin, address, telephone_number)" +
-                        " values(?, ?, ?, ?, ?)");
+                statement = db.prepareStatement("insert into product(pk_product, name_p, price, pk_measure)" +
+                        " values(?, ?, ?, ?)");
                 statement.setInt(1, pk);
                 statement.setString(2, textAreaName.getText());
-                statement.setString(3, textAreaTIN.getText());
-                statement.setString(4, textAreaAddress.getText());
-                statement.setString(5, textAreaTelephone.getText());
+                statement.setString(3, textAreaCost.getText());
+                statement.setString(4, textAreaMeasurePK.getText());
                 statement.executeQuery();
                 statement.close();
 
                 Object[] data = new Object[5];
                 data[0] = String.valueOf(pk);
                 data[1] = textAreaName.getText();
-                data[2] = textAreaTIN.getText();
-                data[3] = textAreaAddress.getText();
-                data[4] = textAreaTelephone.getText();
+                data[2] = textAreaCost.getText();
+                data[3] = textAreaMeasurePK.getText();
+                data[4] = comboBoxMeasureName.getSelectedItem();
 
                 model.addRow(data);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
         dispose();
@@ -155,10 +193,4 @@ public class CustomerDialog extends JDialog {
         dispose();
     }
 
-    /*public static void main(String[] args) {
-        CustomerDialog dialog = new CustomerDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
-    }*/
 }
