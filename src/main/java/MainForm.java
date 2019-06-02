@@ -152,7 +152,6 @@ public class MainForm extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 int row = tableInvoice.getSelectedRow();
                 String pk = (String) model.getValueAt(row, 0);
-//                DataBase.getInstance().executeRequest("delete from invoce_line where pk");
                 DataBase.getInstance().executeRequest("delete from invoice where pk_invoice = " + pk);
                 model.removeRow(row);
             }
