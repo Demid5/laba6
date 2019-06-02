@@ -15,8 +15,8 @@ public class ProductDialog extends JDialog {
     private JTextArea textAreaMeasurePK;
     private MyTableModel model;
     private int row;
+
     private HashMap<String, Integer> textToValue;
-    //private HashMap<String, Integer> textToPosition;
     private HashMap<Integer,Integer> valueToPosition;
 
     private void initComboBox() {
@@ -25,11 +25,9 @@ public class ProductDialog extends JDialog {
         try {
             int i = 0;
             textToValue = new HashMap<String, Integer>();
-            //textToPosition = new HashMap<String, Integer>();
             valueToPosition = new HashMap<Integer, Integer>();
             while (rs.next()) {
                 textToValue.put(rs.getString(2), rs.getInt(1));
-                //textToPosition.put(rs.getString(2), i);
                 valueToPosition.put(rs.getInt(1), i++);
                 comboBoxMeasureName.addItem(rs.getString(2));
             }

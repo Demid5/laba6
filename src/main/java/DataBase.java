@@ -1,4 +1,3 @@
-
 import java.sql.*;
 
 public class DataBase {
@@ -20,17 +19,6 @@ public class DataBase {
         }
         catch (Exception e) {
             connection = null;
-        }
-    }
-
-    public ResultSet executeTest() {
-        try {
-            Statement sqlStatement = connection.createStatement();
-            String readRecordSQL = "select * from CUSTOMER";
-            return sqlStatement.executeQuery(readRecordSQL);
-        }
-        catch (Exception e) {
-            return null;
         }
     }
 
