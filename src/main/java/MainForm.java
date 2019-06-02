@@ -29,6 +29,8 @@ public class MainForm extends JFrame{
     private JButton buttonCus;
     private JPanel panelProduct;
     private JButton buttonProduct;
+    private JButton buttonDeleteProduct;
+    private JButton buttonDeleteCustomer;
 
     private void addRow(MyTableModel model, Object[] dat) {
         model.addRow(dat);
@@ -52,7 +54,7 @@ public class MainForm extends JFrame{
     private void initCustomer() {
         Object[] headers = {"pk", "Имя", "ИНН", "Адрес", "Телефон"};
         Object[][] data = {};
-        MyTableModel model = new MyTableModel(data, headers);
+        final MyTableModel model = new MyTableModel(data, headers);
         tableCustomer.setModel(model);
 
         DataBase db = DataBase.getInstance();
@@ -67,12 +69,23 @@ public class MainForm extends JFrame{
                 CustomerDialog dialog = new CustomerDialog((MyTableModel) tableCustomer.getModel());
             }
         });
+
+        tableCustomer.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        buttonDeleteCustomer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int row = tableCustomer.getSelectedRow();
+                String pk = (String) model.getValueAt(row, 0);
+                DataBase.getInstance().executeRequest("delete from customer where pk_customer = " + pk);
+                model.removeRow(row);
+            }
+        });
     }
 
     private void initProduct() {
         Object[] headers = {"pk", "Название продукта", "Цена", "pk_measure", "Единица измерения"};
         Object[][] data = {};
-        MyTableModel model = new MyTableModel(data, headers);
+        final MyTableModel model = new MyTableModel(data, headers);
         tableProduct.setModel(model);
 
         DataBase db = DataBase.getInstance();
@@ -90,6 +103,16 @@ public class MainForm extends JFrame{
                 ProductDialog dialog = new ProductDialog((MyTableModel) tableProduct.getModel());
             }
         });
+        tableProduct.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        buttonDeleteProduct.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int row = tableProduct.getSelectedRow();
+                String pk = (String) model.getValueAt(row, 0);
+                DataBase.getInstance().executeRequest("delete from product where pk_product = " + pk);
+                model.removeRow(row);
+            }
+        });
     }
 
     public MainForm() {
@@ -100,7 +123,6 @@ public class MainForm extends JFrame{
         setSize(new Dimension(800, 600));
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
 
     }
 

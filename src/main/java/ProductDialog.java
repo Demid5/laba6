@@ -128,6 +128,8 @@ public class ProductDialog extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         initComboBox();
+        textAreaMeasurePK.setText(String.valueOf(textToValue.entrySet().iterator().next().getValue()));
+        comboBoxMeasureName.setSelectedIndex(valueToPosition.get(textToValue.entrySet().iterator().next().getValue()));
 
         comboBoxMeasureName.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
