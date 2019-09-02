@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/* Наличие значимых комментариев к интерфейсу класса отсутствует*/
+
+
 public class InvoiceDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
@@ -39,15 +42,21 @@ public class InvoiceDialog extends JDialog {
     private ArrayList<Boolean> lineExist;
     private HashMap<String, Integer> lineTextToValue;
     private HashMap<Integer,Integer> lineValueToPosition;
+    /*неговорящее название переменной - current что значит!!!*/
     private int current = 0, amountOfLines = 0;
 
+    /*Наличие комментариев к реализации методов НЕТ*/
+    /*неговорящее название метода*/
     private void save() {
         linePrice.set(current, Double.valueOf(textFieldPrice.getText()));
         lineAmount.set(current, Integer.valueOf(textFieldAmount.getText()));
         pkProduct.set(current, lineTextToValue.get(comboBoxProduct.getSelectedItem()));
     }
 
+    
+    /*Наличие комментариев к реализации методов НЕТ*/
     private void initComboBox(String query, HashMap textToValue, HashMap valueToPosition, JComboBox comboBox) {
+        /*краткие названия*/
         DataBase db = DataBase.getInstance();
         ResultSet rs = db.executeRequest(query);
         try {
@@ -64,6 +73,8 @@ public class InvoiceDialog extends JDialog {
         }
     }
 
+    /*Методы не должны быть сильно большого размера*/
+    /*Наличие комментариев к реализации методов НЕТ*/
     private void defaultInit() {
         try {
             MaskFormatter dateMask = new MaskFormatter("####-##-##");
@@ -155,6 +166,8 @@ public class InvoiceDialog extends JDialog {
         });
     }
 
+    /*Методы не должны быть сильно большого размера*/
+    /*Наличие комментариев к реализации методов НЕТ*/
     public InvoiceDialog(Object[] data, MyTableModel model, int row) {
         this.model = model;
         this.row = row;
@@ -164,6 +177,7 @@ public class InvoiceDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
 
         buttonOK.addActionListener(new ActionListener() {
+            
             public void actionPerformed(ActionEvent e) {
                 onOK();
             }
@@ -245,6 +259,7 @@ public class InvoiceDialog extends JDialog {
         setVisible(true);
     }
 
+    /*Наличие комментариев к реализации методов НЕТ*/
     public InvoiceDialog(MyTableModel model) {
 
         this.model = model;
@@ -305,6 +320,9 @@ public class InvoiceDialog extends JDialog {
     }
 
 
+    /*Методы не должны быть сильно большого размера*/
+    /*Наличие комментариев к реализации методов НЕТ*/
+    /*Не должны использоваться сгенерированные методы и названия объектов*/
     private void onOK() {
         save();
         try {
@@ -390,9 +408,13 @@ public class InvoiceDialog extends JDialog {
         dispose();
     }
 
+    /*Не должны использоваться сгенерированные методы и названия объектов*/
+    /*Наличие комментариев к реализации методов НЕТ*/
     private void onCancel() {
         // add your code here if necessary
         dispose();
     }
 
 }
+
+/*субъективная оценка кода = 3+*/
